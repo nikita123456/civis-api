@@ -26,7 +26,7 @@ class Admin::MinistriesController < ApplicationController
 			params[:ministry][:location_id] = 0
 		else
 			@location_type = Location.find(@location_id).location_type
-			if@ministry_level == "national"
+			if @ministry_level == "national"
 				flash[:flash_info] = "Location cannot be selected for national level Ministry."
 				redirect_to admin_ministry_path(@ministry) and return
 			else
