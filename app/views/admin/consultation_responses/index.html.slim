@@ -1,0 +1,29 @@
+- navigation_add 'User Responses', admin_consultation_responses_path
+= render_navigation
+- flash.each do |key, value|
+  - if (key == "flash_info" || key == "flash_success_info")
+    div class=("alert #{key}") = value
+.bg-white.p-3
+  .admin-filter-bg.box-shadow-none
+    .admin-filter-parent
+      .admin-filter-child.width-75
+        .admin-filter-child-field
+          .admin-index-title-bold User Responses
+  .admin-filters-wrap
+    .admin-filter-parent.pl-0
+      .admin-filter-child.width-100
+        / .col-md-2.pl-0
+        /   .filters data-filter-url="/admin/consultation_responses" data-replacement-class="consultation_responses_table"
+        /     .input-group.search
+        /       input.form-control.filter-box name=("search_term_for_consultation_responses") placeholder=("Search consultation responses") type="text" data-behaviour="filter" data-scope="search" data-type="input-filter"
+        .col-md-4
+          .filters data-filter-url="/admin/consultation_responses" data-replacement-class="consultation_responses_table"
+            = select_tag "status", options_for_select([['Approved', 'true'], ['UnApproved', 'false']]), class: 'form-control', include_blank: 'All', data: { behaviour: "filter", scope: "status_filter", type: "select-filter"}
+        / - if current_user.role == "admin"
+        /   .consultation_responses-export-btn
+        /     = exportable(current_user.email, ConsultationResponse)
+    .admin-table.consultation_responses_table
+      = render 'table'
+    / br
+  / .admin-update-button-position
+  /   = link_to "Create Ministry", new_admin_ministry_path, class: "btn"

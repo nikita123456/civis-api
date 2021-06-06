@@ -2,6 +2,7 @@ class ConsultationResponse < ApplicationRecord
   acts_as_paranoid
   include Paginator
   include Scorable::ConsultationResponse
+  include SpotlightSearch
   has_rich_text :response_text
 
   belongs_to :user
@@ -24,6 +25,8 @@ class ConsultationResponse < ApplicationRecord
 
   # validations
   # validates_uniqueness_of :consultation_id, scope: :user_id  
+  
+  store_accessor :meta, :approved_by_id, :rejected_by_id, :approved_at, :rejected_at
 
   # scopes
   scope :consultation_filter, lambda { |consultation_id|
@@ -33,6 +36,15 @@ class ConsultationResponse < ApplicationRecord
 
   scope :sort_records, lambda { |sort = "created_at", sort_direction = "asc"|
   	order("#{sort} #{sort_direction}")
+  }
+
+  scope :published_consultation, lambda { 
+    joins(:consultation).where(consultations: { status: 'published'} )
+  }
+
+  scope :status_filter, lambda { |status|
+    return all unless status.present?
+    where(is_approved: status)
   }
 
   def self.public_consultation_response_filter
@@ -98,5 +110,19 @@ class ConsultationResponse < ApplicationRecord
         raise CivisApi::Exceptions::IncompleteEntity, "Mandatory question with id #{question_id} should be answered." if ( !mandatory_answer.present? || (!mandatory_answer.first["answer"].present? && !mandatory_answer.first["other_option_answer"].present?) )
       end
     end
+  end
+
+  def approve
+    self.approved_by_id = Current.user.id
+    self.is_approved = true
+    self.approved_at = DateTime.now
+    self.save!
+  end
+
+  def reject
+    self.rejected_by_id = Current.user.id
+    self.is_approved = false
+    self.rejected_at = DateTime.now
+    self.save!
   end
 end
