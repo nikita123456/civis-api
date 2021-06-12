@@ -334,4 +334,30 @@ class UserMailer < ApplicationMailer
 		end
 	end
 
+	def notification_for_profane_response(user_id, consultation_id)
+		user = User.find(user_id)
+		consultation = Consultation.find(consultation_id)
+		unless user.confirmed_at?
+			ApplicationMailer.client.deliver_with_template(from: "Civis"+ (Rails.env.production? ? "" : +" - " + Rails.env.titleize)  + "<support@platform.civis.vote>",
+																							to: "yash.devikar@tsgforce.com",
+																							reply_to: "support@civis.vote",
+																							template_alias: "user-confirmation-after-120-hours",
+																							template_model:{
+																								user_name: user.first_name,
+																								consultation_title: consultation.title,
+																							})
+		end
+	end
+
+	def notification_for_profane_response(user, consultation)
+		ApplicationMailer.postmark_client.deliver_with_template(from: "Civis"+ (Rails.env.production? ? "" : +" - " + Rails.env.titleize)  + "<support@platform.civis.vote>",
+																						to: user.email,
+																						reply_to: "support@civis.vote",
+																						template_alias: "profane_response_notification",
+																						template_model:{
+																							user_name: user.first_name,
+																							consultation_title: consultation.title,
+																						})
+	end
+
 end
