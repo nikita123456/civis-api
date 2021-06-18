@@ -17,6 +17,13 @@ table.table.mt-3
             td
               = consultation_response&.user&.full_name
             td
-              = "#{ consultation_response&.is_approved ? 'Approved' : 'Not Approved' }"
+              div class="#{consultation_response.is_approved}"
+                .text-color
+                  - if consultation_response.is_approved == "acceptable"
+                    | Acceptable
+                  - elsif consultation_response.is_approved == "under_review"
+                    | Under Review
+                  - else
+                    | Unacceptable
 .pagination-parent
   = cm_paginate(@consultation_responses.facets)

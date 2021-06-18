@@ -39,3 +39,8 @@ config/environments/_add_gem_paths.js
 /config/credentials/production.key
 /config/database.yml
 /public/uploads/
+
+Gemfile.*
+/app/graphql/civis_api_schema.rb
+/lib/tasks/import_ministries.rake
+/db/schema.rb

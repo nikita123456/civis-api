@@ -11,15 +11,15 @@ module Types
 				field	:summary_hindi,											Types::Objects::CmPageBuilderType, null: true
 				field :is_featured,												Boolean, nil, null: true
 				field :responded_on,											Types::Objects::DateTime, nil, null: true 
-				do 
-					def resolve(object, context)
-						object.responded_on(context[:current_user])
-					end
+				# do 
+				# 	def resolve(object, context)
+				# 		object.responded_on(context[:current_user])
+				# 	end
 
-					def visible?(context)
-						super && context[:current_user].present?
-					end
-				end
+				# 	def visible?(context)
+				# 		super && context[:current_user].present?
+				# 	end
+				# end
 				field :ministry,													Types::Objects::Ministry, nil, null: false
 				field :consultation_responses_count,			Integer,nil, null: false
 				field :page,															Types::Objects::CmPageBuilderType, null: true

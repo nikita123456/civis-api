@@ -22,6 +22,7 @@ class ConsultationResponse < ApplicationRecord
   enum satisfaction_rating: [:dissatisfied, :somewhat_dissatisfied, :somewhat_satisfied, :satisfied]
 
   enum visibility: { shared: 0, anonymous: 1 }
+  enum is_approved: { acceptable: 0, under_review: 1, unacceptable: 2 }
 
   # validations
   # validates_uniqueness_of :consultation_id, scope: :user_id  
@@ -114,14 +115,14 @@ class ConsultationResponse < ApplicationRecord
 
   def approve
     self.approved_by_id = Current.user.id
-    self.is_approved = true
+    self.is_approved = :acceptable
     self.approved_at = DateTime.now
     self.save!
   end
 
   def reject
     self.rejected_by_id = Current.user.id
-    self.is_approved = false
+    self.is_approved = :unacceptable
     self.rejected_at = DateTime.now
     self.save!
   end
