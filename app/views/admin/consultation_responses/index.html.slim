@@ -1,4 +1,4 @@
-- navigation_add 'User Responses', admin_consultation_responses_path
+- navigation_add 'User Responses of Published Consultations', admin_consultation_responses_path
 = render_navigation
 - flash.each do |key, value|
   - if (key == "flash_info" || key == "flash_success_info")
@@ -14,6 +14,6 @@
       .admin-filter-child.width-100
         .col-md-4
           .filters data-filter-url="/admin/consultation_responses" data-replacement-class="consultation_responses_table"
-            = select_tag "status", options_for_select([['Acceptable', '0'], ['Under Review', '1'], ['Unacceptable', '2']]), class: 'form-control', include_blank: 'All', data: { behaviour: "filter", scope: "status_filter", type: "select-filter"}
+            = select_tag "response_status", options_for_select([['Acceptable', '0'], ['Under Review', '1'], ['Unacceptable', '2']]), class: 'form-control', include_blank: 'All', data: { behaviour: "filter", scope: "response_filter", type: "select-filter"}
     .admin-table.consultation_responses_table
       = render 'table'

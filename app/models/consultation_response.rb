@@ -36,16 +36,16 @@ class ConsultationResponse < ApplicationRecord
   }
 
   scope :sort_records, lambda { |sort = "created_at", sort_direction = "asc"|
-  	order("#{sort} #{sort_direction}")
+    order("#{sort} #{sort_direction}")
   }
 
   scope :published_consultation, lambda { 
     joins(:consultation).where(consultations: { status: 'published'} )
   }
 
-  scope :status_filter, lambda { |status|
-    return all unless status.present?
-    where(is_approved: status)
+  scope :response_filter, lambda { |response_status|
+    return all unless response_status.present?
+    where(is_approved: response_status)
   }
 
   def self.public_consultation_response_filter

@@ -146,7 +146,7 @@ ActiveRecord::Schema.define(version: 2021_06_06_052332) do
     t.datetime "deleted_at"
     t.bigint "respondent_id"
     t.bigint "response_round_id"
-    t.boolean "is_approved", default: true
+    t.integer "is_approved", default: 0
     t.jsonb "meta"
     t.index ["consultation_id"], name: "index_consultation_responses_on_consultation_id"
     t.index ["deleted_at"], name: "index_consultation_responses_on_deleted_at"
