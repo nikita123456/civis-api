@@ -18,6 +18,7 @@ class ConsultationResponse < ApplicationRecord
   before_commit :update_reading_time
   before_commit :validate_html_tags
   before_commit :validate_answers
+  after_commit :notify_admin_if_profane
 
   enum satisfaction_rating: [:dissatisfied, :somewhat_dissatisfied, :somewhat_satisfied, :satisfied]
 
@@ -47,6 +48,10 @@ class ConsultationResponse < ApplicationRecord
     return all unless response_status.present?
     where(is_approved: response_status)
   }
+
+  def self.acceptable_responses 
+    where(is_approved: 'acceptable')
+  end
 
   def self.public_consultation_response_filter
     joins(:consultation).where(consultations: { visibility: 'public_consultation'} )
@@ -110,6 +115,12 @@ class ConsultationResponse < ApplicationRecord
       	end
         raise CivisApi::Exceptions::IncompleteEntity, "Mandatory question with id #{question_id} should be answered." if ( !mandatory_answer.present? || (!mandatory_answer.first["answer"].present? && !mandatory_answer.first["other_option_answer"].present?) )
       end
+    end
+  end
+
+  def notify_admin_if_profane
+    if self.is_approved == "under_review"
+      NotifyProfaneResponseEmailToAdminJob.perform_later(self)
     end
   end
 
